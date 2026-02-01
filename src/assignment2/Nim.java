@@ -18,7 +18,7 @@ public class Nim {
                 System.out.println("Round " + roundNumber +". There's " + numberOfSticks + " stick(s) remaining.");
                 System.out.println("You're up! How many sticks will you take: one, or two?");
                 int sticksTakenByHuman = in.nextInt();
-                if (sticksTakenByHuman == 1 || sticksTakenByHuman == 2){
+                if ((sticksTakenByHuman == 1 || sticksTakenByHuman == 2) && !(sticksTakenByHuman > numberOfSticks)){ //Legal move
                     numberOfSticks = numberOfSticks - sticksTakenByHuman;
                     System.out.println("You took " + sticksTakenByHuman + " stick(s).");
                     if (numberOfSticks == 0){
@@ -28,10 +28,14 @@ public class Nim {
                     humansTurn = false;
                 }
                 }
-                while ((sticksTakenByHuman != 1 && sticksTakenByHuman != 2) || ((sticksTakenByHuman > numberOfSticks)) && (numberOfSticks != 0)){
+                if (((sticksTakenByHuman != 1 && sticksTakenByHuman != 2) || ((sticksTakenByHuman == 2)) && (numberOfSticks == 1))){ //Illegal move
+                    //This line is pretty messy, so I'll try to explain it. This code will trigger when:
+                    //1. The human entered a number that is not 1 or 2 
+                    //OR 
+                    //2. if the human tried to take 2 sticks when only 1 stick remains
+                    //1 is self explanitory. 2 is the only situation where a 'valid' number (2) results in an illegal move, so we need a specific edge case for it.
+                    //Thus, this handles all illegal moves possible in Nim.
                     System.out.println("That number is invalid. Please try again.");
-                    sticksTakenByHuman = 1; //This is required so the program does not get stuck into an infinite loop.
-                    //If I try to take 4 sticks, and this code gets tripped, I would never get a chance to reinput a number unless this gets cleared.
                 } 
             if (!humansTurn){ //Computer's turn
                 System.out.println("Round " + roundNumber +". There's " + numberOfSticks + " stick(s) remaining.");
@@ -45,7 +49,7 @@ public class Nim {
                     if (randomNumber < 0.5){
                         numberOfSticks--;
                         roundNumber++;
-                        System.out.println("The computer takes 1 stick.");
+                        System.out.println("The computer takes 1 stick."); //The computer cannot win if it must randomly select between 1 and 2 and picks 1.
                     }
                     else {
                         numberOfSticks-=2;
